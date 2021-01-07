@@ -43,3 +43,5 @@ for tweet in tweepy.Cursor(api.search, q='%23radioastronomy%20OR%20%23radioastro
 
     except StopIteration:
         break
+
+print('End bot run')
