@@ -19,10 +19,10 @@ api = tweepy.API(auth)
 # Make sure you read Twitter's rules on automation - don't spam!
 for tweet in tweepy.Cursor(api.search, q='%23radioastronomy%20OR%20%23radioastrophysics%20OR%20%23radioastro').items(300):
     try:
-        # -> print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')
+        print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')
 
         tweet.retweet()
-        # -> print('Retweet published successfully.')
+        print('Retweet published successfully.')
 
         # Where sleep(10), sleep is measured in seconds.
         # Change 10 to amount of seconds you want to have in-between retweets.
@@ -31,8 +31,8 @@ for tweet in tweepy.Cursor(api.search, q='%23radioastronomy%20OR%20%23radioastro
 
     # Some basic error handling. Will print out why retweet failed, into your terminal.
     except tweepy.TweepError as error:
-        # -> print('\nError. Retweet not successful. Reason: ')
-        # -> print(error.reason)
+        print('\nError. Retweet not successful. Reason: ')
+        print(error.reason)
 
     except StopIteration:
         break
