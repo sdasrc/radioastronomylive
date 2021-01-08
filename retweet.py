@@ -39,7 +39,7 @@ for key in keywords:
     
 for tweet in results:
     validretweet = validretweet + 1
-    if (not tweet.retweeted) and ('RT @' not in tweet.text) and (not tweet.in_reply_to_status_id):
+    if (not tweet.retweeted) and ('RT @' not in tweet.text) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name == 'AstronomyRadio'):
         try:
             tweet.retweet()
             print('Retweet by @' + tweet.user.screen_name + ' published successfully.')
