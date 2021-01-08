@@ -30,27 +30,31 @@ failedtweet = 0
 # Where q='#example', change #example to whatever hashtag or keyword you want to search.
 # Where items(5), change 5 to the amount of retweets you want to tweet.
 # Make sure you read Twitter's rules on automation - don't spam!
-for tweet in tweepy.Cursor(api.search, q='%23radioastronomy%20OR%20%23radioastrophysics%20OR%20%23radioastro').items(50):
-    try:
-        print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')
 
-        tweet.retweet()
-        print('Retweet published successfully.')
-        validretweet = validretweet + 1
+keywords = ['#radioastronomy','#radioastrophysics','Radio Astronomy','Radio Astrophysics']
+results = []
+for key in keywords:    
+    search_results = api.search(q=key, count=30)
+    results = results + search_results
+    
+for tweet in results:
+    if (not tweet.retweeted) and ('RT @' not in tweet.text):
+        try:
+            tweet.retweet()
+            print('Retweet by @' + tweet.user.screen_name + ' published successfully.')
+            validretweet = validretweet + 1
 
-        # Where sleep(10), sleep is measured in seconds.
-        # Change 10 to amount of seconds you want to have in-between retweets.
-        # Read Twitter's rules on automation. Don't spam!
-        sleep(10)
+            # Where sleep(10), sleep is measured in seconds.
+            # Change 10 to amount of seconds you want to have in-between retweets.
+            # Read Twitter's rules on automation. Don't spam!
+            sleep(10)
 
-    # Some basic error handling. Will print out why retweet failed, into your terminal.
-    except tweepy.TweepError as error:
-        print('\nError. Retweet not successful. Reason: ')
-        print(error.reason)
-        failedtweet = failedtweet + 1
+        # Some basic error handling. Will print out why retweet failed, into your terminal.
+        except tweepy.TweepError as error:
+            print('Error. Retweet to @' + tweet.user.screen_name + ' not successful. Reason: '+error.reason)
+            failedtweet = failedtweet + 1
 
-    except StopIteration:
-        break
+        except StopIteration:
+            break
 
-api.update_status('Debug: Bot ran at '+dt_string)
-print('End bot run. Retweet : '+str(validretweet)+', failed : '+str(failedtweet))
+print('\nEnd bot run. Retweet : '+str(validretweet)+', failed : '+str(failedtweet))
