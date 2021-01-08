@@ -52,5 +52,5 @@ for tweet in tweepy.Cursor(api.search, q='%23radioastronomy%20OR%20%23radioastro
     except StopIteration:
         break
 
-api.update_status (**status** = 'Bot ran at '+dt_string)
+api.update_status (**status** = 'Debug: Bot ran at '+dt_string)
 print('End bot run. Retweet : '+str(validretweet)+', failed : '+str(failedtweet))
