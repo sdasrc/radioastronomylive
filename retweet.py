@@ -38,11 +38,11 @@ for key in keywords:
     results = results + search_results
     
 for tweet in results:
-    if (not tweet.retweeted) and ('RT @' not in tweet.text):
+    validretweet = validretweet + 1
+    if (not tweet.retweeted) and ('RT @' not in tweet.text) and (not tweet.in_reply_to_status_id):
         try:
             tweet.retweet()
             print('Retweet by @' + tweet.user.screen_name + ' published successfully.')
-            validretweet = validretweet + 1
 
             # Where sleep(10), sleep is measured in seconds.
             # Change 10 to amount of seconds you want to have in-between retweets.
@@ -57,4 +57,4 @@ for tweet in results:
         except StopIteration:
             break
 
-print('\nEnd bot run. Retweet : '+str(validretweet)+', failed : '+str(failedtweet))
+print('\nEnd bot run. Tweets parsed : '+str(validretweet)+', failed : '+str(failedtweet))
