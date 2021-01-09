@@ -25,22 +25,26 @@ dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 print('Starting bot : '+dt_string)
 
 validretweet = 0
+retweetdone = 0
 failedtweet = 0
 
 # Where q='#example', change #example to whatever hashtag or keyword you want to search.
 # Where items(5), change 5 to the amount of retweets you want to tweet.
 # Make sure you read Twitter's rules on automation - don't spam!
 
-keywords = ['#radioastronomy','#radioastrophysics','Radio Astronomy','Radio Astrophysics']
+keywords = ['#radioastronomy','#radioastrophysics','#radiotelescope','Radio Astronomy','Radio Astrophysics']
 results = []
 for key in keywords:    
-    search_results = api.search(q=key, count=30)
+    search_results = api.search(q=key, count=50,tweet_mode='extended')
     results = results + search_results
     
 for tweet in results:
     validretweet = validretweet + 1
-    if (not tweet.retweeted) and ('RT @' not in tweet.text) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name == 'AstronomyRadio'):
+    fultxt = tweet.full_text
+    fultxt = fultxt.lower()
+    if (not tweet.retweeted) and ('RT @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name == 'AstronomyRadio') and ( ('Radio Astronomy' in fultxt) or ('Radio Astrophysics' in fultxt) or ('#radioastronomy' in fultxt) or ('#radioastrophysics' in fultxt) or ('#radiotelescope' in fultxt) ):
         try:
+            retweetdone = retweetdone + 1
             tweet.retweet()
             print('Retweet by @' + tweet.user.screen_name + ' published successfully.')
 
@@ -57,4 +61,4 @@ for tweet in results:
         except StopIteration:
             break
 
-print('\nEnd bot run. Tweets parsed : '+str(validretweet)+', failed : '+str(failedtweet))
+print('\nEnd bot run. Tweets parsed : '+str(validretweet)+', successful : '+str(retweetdone)+' failed : '+str(failedtweet))
