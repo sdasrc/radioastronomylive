@@ -42,7 +42,7 @@ for tweet in results:
     validretweet = validretweet + 1
     fultxt = tweet.full_text
     fultxt = fultxt.lower()
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name == 'astronomyradio') and ( ('radio astro' in fultxt) or ('radio-astro' in fultxt) or ('radioastro' in fultxt) or ('radiotelescope' in fultxt) ):
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name == 'AstronomyRadio') and ( ('radio astro' in fultxt) or ('radio-astro' in fultxt) or ('radioastro' in fultxt) or ('radiotelescope' in fultxt) ):
         try:
             tweet.retweet()
             retweetdone = retweetdone + 1
