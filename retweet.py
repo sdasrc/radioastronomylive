@@ -39,11 +39,11 @@ for key in keywords:
     results = results + search_results
     
 for tweet in results:
-    validretweet = validretweet + 1
     fultxt = tweet.full_text
     fultxt = fultxt.lower()
     if (not tweet.retweeted) and ('rt @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name == 'AstronomyRadio') and ( ('radio astro' in fultxt) or ('radio-astro' in fultxt) or ('radioastro' in fultxt) or ('radiotelescope' in fultxt) ):
         try:
+            validretweet = validretweet + 1
             tweet.retweet()
             retweetdone = retweetdone + 1
             print('Retweet by @' + tweet.user.screen_name + ' published successfully.')
