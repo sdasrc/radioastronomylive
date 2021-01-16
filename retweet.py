@@ -32,7 +32,8 @@ failedtweet = 0
 # Where items(5), change 5 to the amount of retweets you want to tweet.
 # Make sure you read Twitter's rules on automation - don't spam!
 
-keywords = ['#radioastronomy','#radioastrophysics','#radiotelescope','Radio Astro','lofar','gmrt','vla','vlbi','nrao']
+keywords = ['#radioastronomy','#radioastrophysics','#radiotelescope','radio astro','radioastro','radio-astro','lofar','gmrt','vla','vlbi','nrao','ska']
+excludename = ['AstronomyRadio']
 results = []
 for key in keywords:    
     search_results = api.search(q=key, count=50,tweet_mode='extended')
@@ -41,7 +42,7 @@ for key in keywords:
 for tweet in results:
     fultxt = tweet.full_text
     fultxt = fultxt.lower()
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and ('radio' in fultxt) and (not tweet.user.screen_name == 'AstronomyRadio') and ( ('radio astro' in fultxt) or ('lofar' in fultxt) or ('gmrt' in fultxt) or ('nrao' in fultxt)  or ('vlbi' in fultxt)  or ('vla' in fultxt) or ('radio-astro' in fultxt) or ('radioastro' in fultxt) or ('radiotelescope' in fultxt) ):
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and ('radio' in fultxt) and (not tweet.user.screen_name == 'AstronomyRadio') and ( ('radio astro' in fultxt) or ('lofar' in fultxt) or ('gmrt' in fultxt) or ('nrao' in fultxt)  or ('vlbi' in fultxt)  or ('vla' in fultxt) or ('ska' in fultxt) or ('radio-astro' in fultxt) or ('radioastro' in fultxt) or ('radiotelescope' in fultxt) ):
         try:
             validretweet = validretweet + 1
             tweet.retweet()
