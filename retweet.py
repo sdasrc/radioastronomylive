@@ -27,6 +27,7 @@ print('Starting bot : '+dt_string)
 validretweet = 0
 retweetdone = 0
 failedtweet = 0
+waittime = 80 # in seconds
 
 # Where q='#example', change #example to whatever hashtag or keyword you want to search.
 # Where items(5), change 5 to the amount of retweets you want to tweet.
@@ -52,7 +53,7 @@ for tweet in results:
             # Where sleep(10), sleep is measured in seconds.
             # Change 10 to amount of seconds you want to have in-between retweets.
             # Read Twitter's rules on automation. Don't spam!
-            sleep(10)
+            sleep(waittime)
 
         # Some basic error handling. Will print out why retweet failed, into your terminal.
         except tweepy.TweepError as error:
