@@ -27,40 +27,45 @@ print('Starting bot : '+dt_string)
 validretweet = 0
 retweetdone = 0
 failedtweet = 0
-waittime = 80 # in seconds
+waittime = 90 # in seconds
 
 # Where q='#example', change #example to whatever hashtag or keyword you want to search.
 # Where items(5), change 5 to the amount of retweets you want to tweet.
 # Make sure you read Twitter's rules on automation - don't spam!
 
-keywords = ['#radioastronomy','#radioastrophysics','#radiotelescope','radio astro','radioastro','radio-astro','lofar','gmrt','vla','vlbi','nrao','ska']
-excludename = ['AstronomyRadio']
-results = []
-for key in keywords:    
+# RUN ROUNDS - 1 : RADIO ASTRONOMY
+
+keydict = {
+    'radio astronomy' : ['radio astro','radio-astro','radioastro','radio sun','radio galax','active galax'],
+    'radio telescope' : ['radioastro','lofar','gmrt','vla','vlbi','nrao','ska']
+}
+
+searchkeys = keydict.keys()
+for key in searchkeys:
+    print('Searched for',key)
     search_results = api.search(q=key, count=50,tweet_mode='extended')
-    results = results + search_results
-    
-for tweet in results:
-    fultxt = tweet.full_text
-    fultxt = fultxt.lower()
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text) and (not tweet.in_reply_to_status_id) and ('radio' in fultxt) and (not tweet.user.screen_name == 'AstronomyRadio') and ( ('radio astro' in fultxt) or ('lofar' in fultxt) or ('gmrt' in fultxt) or ('nrao' in fultxt)  or ('vlbi' in fultxt)  or ('vla' in fultxt) or ('ska' in fultxt) or ('radio-astro' in fultxt) or ('radioastro' in fultxt) or ('radiotelescope' in fultxt) ):
-        try:
+    mandatory_keywords = keydict[key]
+    goodtweet = (fulltweet for fulltweet in search_results for goodkeys in mandatory_keywords if goodkeys in fulltweet.full_text.lower())
+    cc = 0
+    for tweet in goodtweet:
+        if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio'):
             validretweet = validretweet + 1
-            tweet.retweet()
-            retweetdone = retweetdone + 1
-            print('Retweet by @' + tweet.user.screen_name + ' published successfully.')
+            try:
+                tweet.retweet()
+                retweetdone = retweetdone + 1
+                print('SUCCESSFULL @' + tweet.user.screen_name)
 
-            # Where sleep(10), sleep is measured in seconds.
-            # Change 10 to amount of seconds you want to have in-between retweets.
-            # Read Twitter's rules on automation. Don't spam!
-            sleep(waittime)
+                # Where sleep(10), sleep is measured in seconds.
+                # Change 10 to amount of seconds you want to have in-between retweets.
+                # Read Twitter's rules on automation. Don't spam!
+                sleep(waittime)
 
-        # Some basic error handling. Will print out why retweet failed, into your terminal.
-        except tweepy.TweepError as error:
-            print('Error. Retweet to @' + tweet.user.screen_name + ' not successful. Reason: '+error.reason)
-            failedtweet = failedtweet + 1
+            # Some basic error handling. Will print out why retweet failed, into your terminal.
+            except tweepy.TweepError as error:
+                print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+                failedtweet = failedtweet + 1
 
-        except StopIteration:
-            break
+            except StopIteration:
+                break
 
-print('\nEnd bot run. Tweets parsed : '+str(validretweet)+', successful : '+str(retweetdone)+' failed : '+str(failedtweet))
+print('\nEnd bot run. Valid tweets : '+str(validretweet)+', successful : '+str(retweetdone)+' failed : '+str(failedtweet))
