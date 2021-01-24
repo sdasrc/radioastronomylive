@@ -9,8 +9,14 @@ Currently used Search Keys and Filter Keys are below -
 
 | Search | Filters |
 | --- | --- |
-| radio astronomy | radio astro, radio-astro, radioastro, radio sun, radio galax, active galax |
-| radio telescope | radioastro, lofar, gmrt, vla, vlbi, nrao, ska |
+| radio astronomy  | radio astro, radio-astro, radioastro, radio sun, radio galax, active galax, NGC |
+|  radio telescope  | radioastro, lofar, gmrt, vla, vlbi, nrao, ska, NGC |
+|  radio signal  | star, galax, pulsar, milky, sun, solar, extragalac, supernova, radio observ, agn, radio jet, NGC |
+|  radio supernova  | radioastro, telescope, observation, research, arxiv, paper, NGC |
+|  radio jet  | radioastro, telescope, observation, research, arxiv, paper, NGC |
+|  radio galax  | radioastro, telescope, observation, research, arxiv, paper, NGC |
+|  radio sun  | radioastro, telescope, observation, research, arxiv, paper |
+|  radio NGC  | radioastro, telescope, observation, research, arxiv, paper |
 
 
 ## How to run this bot locally?
@@ -19,7 +25,7 @@ Currently used Search Keys and Filter Keys are below -
 
 * Install tweepy. 
 
-`pip install tweepy`
+`   pip install tweepy`
 
 * Sign up for a Twitter Developer account and create a new application [here](https://apps.twitter.com/app/new). A Twitter application is essentially your 'bot' - it will send tweets, direct message, reply, retweet, follow and search Twitter from any email inbox. Generate your a consumer key, consumer secret, access key, and access secret. This bot requires both READ and WRITE Permissions enabled to work.
 
@@ -31,7 +37,7 @@ Currently used Search Keys and Filter Keys are below -
 
 * Run the bot by
 
-`python retweet.py`
+`   python retweet.py`
 
 ## Optional - Setting up a Heroku repo
 

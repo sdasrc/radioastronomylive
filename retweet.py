@@ -32,7 +32,7 @@ now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 print('Starting bot : '+dt_string)
 
-searchcount = 50 # Number of tweets to search for in each round
+searchcount = 100 # Number of tweets to search for in each round
 validretweet = 0 # Number of valid tweets filtered per specifications 
 retweetdone = 0 # Retweets done
 failedtweet = 0 # Retweeting failed
@@ -47,8 +47,14 @@ waittime = 90 # in seconds
 
 keydict = {
     # 'SEARCH TAG' : ['FILTER TAG 1', 'FILTER TAG 2', ...]
-    'radio astronomy' : ['radio astro','radio-astro','radioastro','radio sun','radio galax','active galax'],
-    'radio telescope' : ['radioastro','lofar','gmrt','vla','vlbi','nrao','ska']
+    'radio astronomy' : ['radio astro','radio-astro','radioastro','radio sun','radio galax','active galax','NGC'],
+    'radio telescope' : ['radioastro','lofar','gmrt','vla','vlbi','nrao','ska','NGC'],
+    'radio signal' : ['star','galax','pulsar','milky','sun','solar','extragalac','supernova','radio observ','agn','radio jet','NGC'],
+    'radio supernova' : ['radioastro','telescope','observation','research','arxiv','paper','NGC'],
+    'radio jet' : ['radioastro','telescope','observation','research','arxiv','paper','NGC'],
+    'radio galax' : ['radioastro','telescope','observation','research','arxiv','paper','NGC'],
+    'radio sun' : ['radioastro','telescope','observation','research','arxiv','paper'],
+    'radio NGC' : ['radioastro','telescope','observation','research','arxiv','paper']
 }
 
 searchkeys = keydict.keys()
