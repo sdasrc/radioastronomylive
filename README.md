@@ -18,6 +18,8 @@ Currently used Search Keys and Filter Keys are below -
 |  radio sun  | radioastro, telescope, observation, research, arxiv, paper |
 |  radio NGC  | radioastro, telescope, observation, research, arxiv, paper |
 
+* Suggest new keywords by [opening a new issue](https://github.com/dassoumyadeep/radio-astronomy-retweeter/issues/new).
+
 
 ## How to run this bot locally?
 
