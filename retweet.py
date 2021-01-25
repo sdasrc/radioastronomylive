@@ -49,12 +49,13 @@ keydict = {
     # 'SEARCH TAG' : ['FILTER TAG 1', 'FILTER TAG 2', ...]
     'radio astronomy' : ['radio astro','radio-astro','radioastro','radio sun','radio galax','active galax','NGC'],
     'radio telescope' : ['radioastro','lofar','gmrt','vla','vlbi','nrao','ska','NGC'],
-    'radio signal' : ['star','galax','pulsar','milky','sun','solar','extragalac','supernova','radio observ','agn','radio jet','NGC'],
+    'radio signal' : ['galax','pulsar','milky','solar','extragalac','supernova','radio observ','agn','radio jet','NGC'],
     'radio supernova' : ['radioastro','telescope','observation','research','arxiv','paper','NGC'],
     'radio jet' : ['radioastro','telescope','observation','research','arxiv','paper','NGC'],
     'radio galax' : ['radioastro','telescope','observation','research','arxiv','paper','NGC'],
     'radio sun' : ['radioastro','telescope','observation','research','arxiv','paper'],
-    'radio NGC' : ['radioastro','telescope','observation','research','arxiv','paper']
+    'radio NGC' : ['radioastro','telescope','observation','research','arxiv','paper'],
+    'astronomyradio' : ['astronomyradio']
 }
 
 searchkeys = keydict.keys()
