@@ -32,11 +32,15 @@ now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 print('Starting bot : '+dt_string)
 
-searchcount = 100 # Number of tweets to search for in each round
+searchcount = 20 # Number of tweets to search for in each round
 validretweet = 0 # Number of valid tweets filtered per specifications 
 retweetdone = 0 # Retweets done
 failedtweet = 0 # Retweeting failed
 waittime = 90 # in seconds
+
+# Post maximum 5 retweets at a time
+maximumtweets = 5
+countcurrtweets = 0
 
 
 # Where q='#example', change #example to whatever hashtag or keyword you want to search.
@@ -60,6 +64,9 @@ keydict = {
 
 searchkeys = keydict.keys()
 for key in searchkeys:
+    if(countcurrtweets > maximumtweets):
+        break
+    countcurrtweets = countcurrtweets + 1
     print('Searched for',key)
     search_results = api.search(q=key, count=searchcount,tweet_mode='extended')
     mandatory_keywords = keydict[key]
