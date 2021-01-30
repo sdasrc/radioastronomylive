@@ -3,22 +3,15 @@
 This is **Radio Astronomy Live**, a non-spammy twitter bot written in [Tweepy](http://www.tweepy.org/). The bot is run periodically on a [Heroku](https://heroku.com) Dyno.
 
 ## How does it work?
-Radio Astronomy Live is a simple python script that iteratively searches for tweets using a broad set of keywords. For each keyword, the resultant tweets are further filtered by a narrow set of keywords. 
+Radio Astronomy Live is a simple python script that iteratively searches for tweets with the `radio astronomy` keyword. These tweets are further filtered using a list of keywords in order to exclude false hits.
 
-Currently used Search Keys and Filter Keys are below - 
+The current list of keywords is given below.
 
-| Search | Filters |
-| --- | --- |
-| radio astronomy  | radio astro, radio-astro, radioastro, radio sun, radio galax, active galax, NGC |
-|  radio telescope  | radioastro, lofar, gmrt, vla, vlbi, nrao, ska, NGC |
-|  radio signal  | star, galax, pulsar, milky, sun, solar, extragalac, supernova, radio observ, agn, radio jet, NGC |
-|  radio supernova  | radioastro, telescope, observation, research, arxiv, paper, NGC |
-|  radio jet  | radioastro, telescope, observation, research, arxiv, paper, NGC |
-|  radio galax  | radioastro, telescope, observation, research, arxiv, paper, NGC |
-|  radio sun  | radioastro, telescope, observation, research, arxiv, paper |
-|  radio NGC  | radioastro, telescope, observation, research, arxiv, paper |
+`    active, agn, arxiv, astro, astronomy, extragalac, galax, gmrt, jet, lofar, milky, NGC, nrao, observ, paper, pulsar, radio, radio-astro, radioastro, research, signal, ska, solar, star, sun, supernova, telescope, vla, vlbi`
 
-* Suggest new keywords by [opening a new issue](https://github.com/dassoumyadeep/radio-astronomy-retweeter/issues/new).
+The bot also searches for `@AstronomyRadio` and `#AstronomyRadio` tags.
+
+* Suggest new keywords by [opening a new issue](https://github.com/dassoumyadeep/radioastronomylive/issues/new).
 
 
 ## How to run this bot locally?
@@ -65,6 +58,6 @@ Currently used Search Keys and Filter Keys are below -
 
 ## Support
 
-* Suggest new keywords or report issues by [opening a new issue](https://github.com/dassoumyadeep/radio-astronomy-retweeter/issues/new).
+* Suggest new keywords or report issues by [opening a new issue](https://github.com/dassoumyadeep/radioastronomylive/issues/new).
 
 * Alternatively, [mail me](mailto:soumyadeep.das.phy14@iitbhu.ac.in?subject=[GitHub]%20Radio%20Astronomy%20Live) to report an issue or collaborate. 
