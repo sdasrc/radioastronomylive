@@ -8,8 +8,10 @@ Radio Astronomy Live is a simple python script that iteratively searches for twe
 The current list of keywords is given below.
 
 ```
-    active, agn, arxiv, astro, astronomy, extragalac, galax, gmrt, jet, lofar, milky, NGC, nrao, observ, paper, pulsar, radio, radio-astro, radioastro, research, signal, ska, solar, star, sun, supernova, telescope, vla, vlbi
-    
+    active, agn, arxiv, astro, astronomy, extragalac, galax, gmrt, jet, lofar,
+    milky, NGC, nrao, observ, paper, pulsar, radio, radio-astro, radioastro,
+    research, signal, ska, solar, star, sun, supernova, telescope, vla, vlbi
+
 ```
 
 The bot also searches for `@AstronomyRadio` and `#AstronomyRadio` tags.
