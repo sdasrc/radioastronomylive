@@ -23,19 +23,26 @@ CONSUMER_KEY = environ['CONSUMER_KEY']
 CONSUMER_SECRET = environ['CONSUMER_SECRET']
 ACCESS_KEY = environ['ACCESS_KEY']
 ACCESS_SECRET = environ['ACCESS_SECRET']
-ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
-searchcount = 100 # Number of tweets to search for in each round
-retweetdone = 0 # Retweets done
-waittime = 10 # in seconds
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+print('Starting bot : '+dt_string)
 
-lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)
-lastmsg = int(lastmsg/1000)
-lastmsgdt = datetime.fromtimestamp(lastmsg)
+searchcount = 20 # Number of tweets to search for in each round
+validretweet = 0 # Number of valid tweets filtered per specifications 
+retweetdone = 0 # Retweets done
+failedtweet = 0 # Retweeting failed
+waittime = 90 # in seconds
+
+# Post maximum 5 retweets at a time
+maximumtweets = 5
+countcurrtweets = 0
+
+
 # Where q='#example', change #example to whatever hashtag or keyword you want to search.
 # Where items(5), change 5 to the amount of retweets you want to tweet.
 # Make sure you read Twitter's rules on automation - don't spam!
@@ -57,17 +64,21 @@ keydict = {
 
 searchkeys = keydict.keys()
 for key in searchkeys:
+    if(countcurrtweets > maximumtweets):
+        break
+    countcurrtweets = countcurrtweets + 1
     print('Searched for',key)
     search_results = api.search(q=key, count=searchcount,tweet_mode='extended')
     mandatory_keywords = keydict[key]
     goodtweet = (fulltweet for fulltweet in search_results for goodkeys in mandatory_keywords if goodkeys in fulltweet.full_text.lower())
     cc = 0
     for tweet in goodtweet:
-        if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and (lastmsgdt < tweet.created_at) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio'):
+        if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio'):
+            validretweet = validretweet + 1
             try:
-                direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
+                tweet.retweet()
                 retweetdone = retweetdone + 1
-                print('sent @' + tweet.user.screen_name)
+                print('SUCCESSFULL @' + tweet.user.screen_name)
 
                 # Where sleep(10), sleep is measured in seconds.
                 # Change 10 to amount of seconds you want to have in-between retweets.
@@ -77,11 +88,9 @@ for key in searchkeys:
             # Some basic error handling. Will print out why retweet failed, into your terminal.
             except tweepy.TweepError as error:
                 print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+                failedtweet = failedtweet + 1
 
             except StopIteration:
                 break
 
-now = datetime.now()
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")                
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. . Sent : '+str(retweetdone)) 
-print('\nEnd bot run at '+dt_string+'. . Sent : '+str(retweetdone)) 
+print('\nEnd bot run. Valid tweets : '+str(validretweet)+', successful : '+str(retweetdone)+' failed : '+str(failedtweet))
