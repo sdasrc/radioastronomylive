@@ -22,7 +22,7 @@ api = tweepy.API(auth)
 searchcount = 200 # Number of tweets to search for in each round
 retweetdone = 0 # Retweets done
 waittime = 10 # in seconds
-oldtweetdays = 0
+oldtweetdays = 1
 
 def splitarr(inparr, nn):
     cc = 0 
