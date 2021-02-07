@@ -108,7 +108,7 @@ accsearch = 0
 # (from:TheNRAO OR from:,ICRAR, OR from:SKA_telescope, OR from:ASTRON_NL, OR from:IRA_INAF, OR from:GreenBankObserv, OR from:NCRA_Outreach, OR from:LOFAR, OR from:OgNimaeb, OR from:ColourfulCosmos, OR from:mwatelescope)
 print('Specific account search')
 accounts = ['TheNRAO', 'ICRAR', 'SKA_telescope', 'ASTRON_NL', 'IRA_INAF', 'GreenBankObserv', 'NCRA_Outreach', 'LOFAR', 'OgNimaeb', 'ColourfulCosmos', 'mwatelescope']
-acckeys = ', OR from:'.join(tags)
+acckeys = ', OR from:'.join(accounts)
 key = acckeys+' -filter:retweets AND -filter:replies since:'+lastmsgcutoff
 search_results = []
 search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
@@ -273,7 +273,7 @@ print('\nTotal Results : ',str(len(search_results)))
 #  and (lastmsgdt < tweet.created_at) 
 # tweethist = []
 for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ('radio' in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             print('SENT : @',tweet.user.screen_name)
