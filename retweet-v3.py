@@ -49,6 +49,19 @@ ignoretags = ' -streaming -buy -listen -paranormal -broadcast -mixcloud -nowplay
 filtertags = '-filter:retweets AND -filter:replies lang:en '
 breakarr = 6
 
+# https://www.patorjk.com/software/taag/#p=display&h=1&f=Big&t=Direct%20Tagging
+
+# =================================================================================
+#   _____   _                   _     _______                    _               
+#  |  __ \ (_)                 | |   |__   __|                  (_)              
+#  | |  | | _  _ __  ___   ___ | |_     | |  __ _   __ _   __ _  _  _ __    __ _ 
+#  | |  | || || '__|/ _ \ / __|| __|    | | / _` | / _` | / _` || || '_ \  / _` |
+#  | |__| || || |  |  __/| (__ | |_     | || (_| || (_| || (_| || || | | || (_| |
+#  |_____/ |_||_|   \___| \___| \__|    |_| \__,_| \__, | \__, ||_||_| |_| \__, |
+#                                                   __/ |  __/ |            __/ |
+#                                                  |___/  |___/            |___/ 
+# =================================================================================
+
 directtags = 0
 # Search for tagging
 print('Tags search')
@@ -79,6 +92,64 @@ if(directtags == 1):
 # keys =['radio','astronomy','galaxy']
 # key = '%2C'.join(keys)
 
+
+# ======================================================================================== 
+#                                          _      _____                          _     
+#     /\                                  | |    / ____|                        | |    
+#    /  \    ___  ___  ___   _   _  _ __  | |_  | (___    ___   __ _  _ __  ___ | |__  
+#   / /\ \  / __|/ __|/ _ \ | | | || '_ \ | __|  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
+#  / ____ \| (__| (__| (_) || |_| || | | || |_   ____) ||  __/| (_| || |  | (__ | | | |
+# /_/    \_\\___|\___|\___/  \__,_||_| |_| \__| |_____/  \___| \__,_||_|   \___||_| |_|
+#
+# ========================================================================================
+                                                                                                                                                                            
+accsearch = 0
+# Search for tagging
+# (from:TheNRAO OR from:,ICRAR, OR from:SKA_telescope, OR from:ASTRON_NL, OR from:IRA_INAF, OR from:GreenBankObserv, OR from:NCRA_Outreach, OR from:LOFAR, OR from:OgNimaeb, OR from:ColourfulCosmos, OR from:mwatelescope)
+print('Specific account search')
+accounts = ['TheNRAO', 'ICRAR', 'SKA_telescope', 'ASTRON_NL', 'IRA_INAF', 'GreenBankObserv', 'NCRA_Outreach', 'LOFAR', 'OgNimaeb', 'ColourfulCosmos', 'mwatelescope']
+acckeys = ', OR from:'.join(tags)
+key = acckeys+' -filter:retweets AND -filter:replies since:'+lastmsgcutoff
+search_results = []
+search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
+print(len(search_results))
+tweethist = []
+for tweet in search_results:
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+        try:
+            direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
+            accsearch = 1
+            print('SENT : @',tweet.user.screen_name)
+            #print(tweet.created_at)
+            tweethist.append(tweet.id_str)
+
+# Some basic error handling. Will print out why retweet failed, into your terminal.
+        except tweepy.TweepError as error:
+            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+
+        except StopIteration:
+            break
+
+if(accsearch == 1):
+    print('AstronomyRadio tags done\n---\n')
+    direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Account Searches Done\n---\n') 
+
+
+# ======================================================================================== 
+#  _    _              _      _                   _____                          _     
+# | |  | |            | |    | |                 / ____|                        | |    
+# | |__| |  __ _  ___ | |__  | |_  __ _   __ _  | (___    ___   __ _  _ __  ___ | |__  
+# |  __  | / _` |/ __|| '_ \ | __|/ _` | / _` |  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
+# | |  | || (_| |\__ \| | | || |_| (_| || (_| |  ____) ||  __/| (_| || |  | (__ | | | |
+# |_|  |_| \__,_||___/|_| |_| \__|\__,_| \__, | |_____/  \___| \__,_||_|   \___||_| |_|
+#                                         __/ |                                        
+#                                        |___/                                         
+# ======================================================================================== 
+
+
+# print(len(search_results))
+# keys =['radio','astronomy','galaxy']
+# key = '%2C'.join(keys)
 # HASTAG SEARCH #haiku #poetry %23haiku+%23poetry
 print('hashtag search')
 key = 'astronomyradio OR radioastronomy OR RadioAstronomy OR RadioAstrophysics OR radioastrophysics OR RadioTelescope OR radiotelescope '+filtertags+' since:'+lastmsgcutoff
@@ -105,11 +176,18 @@ print(len(search_results))
 if(hashtagsearch == 1):
     print('Hashtag searches done\n---\n')
     direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Hashtag searching Done\n---\n') 
-# print(len(search_results))
-# KEYWORD SEARCH
-# set(atags).intersection(set(btags))
-# RADIO
-# 'askap', 'csiro', 
+
+# ======================================================================================== 
+#   ____          _          _____             _  _        
+#  / __ \        | |        |  __ \           | |(_)       
+# | |  | | _ __  | | _   _  | |__) | __ _   __| | _   ___  
+# | |  | || '_ \ | || | | | |  _  / / _` | / _` || | / _ \ 
+# | |__| || | | || || |_| | | | \ \| (_| || (_| || || (_) |
+#  \____/ |_| |_||_| \__, | |_|  \_\\__,_| \__,_||_| \___/ 
+#                     __/ |                                
+#                    |___/                                 
+# ======================================================================================== 
+
 
 # radio, astronomy (galaxy, OR agn, OR pulsar, OR nebula)
 # radio, (astronomy, OR astronomer, OR astrophysics, OR science), (galaxy, OR agn, OR pulsar, OR nebula)
@@ -129,6 +207,15 @@ for tags in tagarr:
     search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
     print(len(search_results))
 
+# ======================================================================================== 
+#  _____             _  _          _____                                     _     
+# |  __ \           | |(_)        |  __ \                                   | |    
+# | |__) | __ _   __| | _   ___   | |__) | ___  ___   ___   __ _  _ __  ___ | |__  
+# |  _  / / _` | / _` || | / _ \  |  _  / / _ \/ __| / _ \ / _` || '__|/ __|| '_ \ 
+# | | \ \| (_| || (_| || || (_) | | | \ \|  __/\__ \|  __/| (_| || |  | (__ | | | |
+# |_|  \_\\__,_| \__,_||_| \___/  |_|  \_\\___||___/ \___| \__,_||_|   \___||_| |_|
+# ======================================================================================== 
+
 # Radio Astronomy Science Paper
 print('Radio Astronomy Science Paper')
 secondtaglist = ['astronomy', 'astronomer', 'astrophysics', 'science', 'research', 'paper', 'arxiv', 'observation', 'signal','source','object']
@@ -140,6 +227,15 @@ for tags in tagarr:
     key = 'radio, ('+secondtags+'), ('+srctag+')  '+ignoretags+'  '+filtertags+'since:'+lastmsgcutoff
     search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
     print(len(search_results))
+
+# ======================================================================================== 
+#  _____             _  _          _    _               _____                  
+# |  __ \           | |(_)        | |  | |             / ____|                 
+# | |__) | __ _   __| | _   ___   | |  | | ___   ___  | |      __ _  ___   ___ 
+# |  _  / / _` | / _` || | / _ \  | |  | |/ __| / _ \ | |     / _` |/ __| / _ \
+# | | \ \| (_| || (_| || || (_) | | |__| |\__ \|  __/ | |____| (_| |\__ \|  __/
+# |_|  \_\\__,_| \__,_||_| \___/   \____/ |___/ \___|  \_____|\__,_||___/ \___|
+# ======================================================================================== 
 
 # Radio Astronomy Use Case
 print('Radio Use Cases')
@@ -162,6 +258,17 @@ for tags in tagarr:
     print(len(search_results))
 
 print('\nTotal Results : ',str(len(search_results)))
+
+# ======================================================================================== 
+#   _____                   _   __  __                                     
+#  / ____|                 | | |  \/  |                                    
+# | (___    ___  _ __    __| | | \  / |  ___  ___  ___   __ _   __ _   ___ 
+#  \___ \  / _ \| '_ \  / _` | | |\/| | / _ \/ __|/ __| / _` | / _` | / _ \
+#  ____) ||  __/| | | || (_| | | |  | ||  __/\__ \\__ \| (_| || (_| ||  __/
+# |_____/  \___||_| |_| \__,_| |_|  |_| \___||___/|___/ \__,_| \__, | \___|
+#                                                               __/ |      
+#                                                              |___/
+# ======================================================================================== 
 
 #  and (lastmsgdt < tweet.created_at) 
 # tweethist = []
