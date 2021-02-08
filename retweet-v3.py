@@ -74,7 +74,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             directtags = 1
-            print('SENT : @',tweet.user.screen_name)
+            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
@@ -119,7 +119,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             accsearch = 1
-            print('SENT : @',tweet.user.screen_name)
+            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
@@ -161,7 +161,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             hashtagsearch = 1
-            print('SENT : @',tweet.user.screen_name)
+            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
@@ -276,7 +276,7 @@ for tweet in search_results:
     if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ('radio' in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-            print('SENT : @',tweet.user.screen_name)
+            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
