@@ -74,8 +74,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             directtags = 1
-            print('\nSENT : @',tweet.user.screen_name,' - 
-            ',tweet.full_text)
+            print('\nSENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
