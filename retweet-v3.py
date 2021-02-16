@@ -273,7 +273,7 @@ print('\nTotal Results : ',str(len(search_results)))
 #  and (lastmsgdt < tweet.created_at) 
 # tweethist = []
 for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ('radio' in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ('jet set radio' not in tweet.full_text.lower()) and ('radio' in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             print('\nSENT : @',tweet.user.screen_name,' - ',tweet.full_text)
