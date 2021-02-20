@@ -10,13 +10,13 @@ from datetime import datetime, timedelta
 from filters import *
 import splitarr
 
-from keys import *
-# from os import environ
-# CONSUMER_KEY = environ['CONSUMER_KEY']
-# CONSUMER_SECRET = environ['CONSUMER_SECRET']
-# ACCESS_KEY = environ['ACCESS_KEY']
-# ACCESS_SECRET = environ['ACCESS_SECRET']
-# ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
+# from keys import *
+from os import environ
+CONSUMER_KEY = environ['CONSUMER_KEY']
+CONSUMER_SECRET = environ['CONSUMER_SECRET']
+ACCESS_KEY = environ['ACCESS_KEY']
+ACCESS_SECRET = environ['ACCESS_SECRET']
+ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
