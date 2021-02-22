@@ -10,13 +10,13 @@ from datetime import datetime, timedelta
 from filters import *
 import splitarr
 
-# from keys import *
-from os import environ
-CONSUMER_KEY = environ['CONSUMER_KEY']
-CONSUMER_SECRET = environ['CONSUMER_SECRET']
-ACCESS_KEY = environ['ACCESS_KEY']
-ACCESS_SECRET = environ['ACCESS_SECRET']
-ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
+from keys import *
+# from os import environ
+# CONSUMER_KEY = environ['CONSUMER_KEY']
+# CONSUMER_SECRET = environ['CONSUMER_SECRET']
+# ACCESS_KEY = environ['ACCESS_KEY']
+# ACCESS_SECRET = environ['ACCESS_SECRET']
+# ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
@@ -25,11 +25,11 @@ api = tweepy.API(auth)
 searchcount = 200 # Number of tweets to search for in each round
 retweetdone = 0 # Retweets done
 waittime = 10 # in seconds
-oldtweetdays = 1
+oldtweetdays = 2
 
 lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)
 lastmsg = int(lastmsg/1000)
-# lastmsg = datetime.timestamp(datetime(2021, 2, 30, 6, 21, 1)) # Uncomment this to use custom cutoff date time for tweets
+lastmsg = datetime.timestamp(datetime(2021, 2, 20, 6, 21, 1)) # Uncomment this to use custom cutoff date time for tweets
 lastmsgdt = datetime.fromtimestamp(lastmsg)
 lastmsgcutoff = lastmsgdt - timedelta(days=oldtweetdays)
 lastmsgcutoff = lastmsgcutoff.strftime("%Y-%m-%d") 
@@ -62,113 +62,85 @@ key = '@astronomyradio OR #astronomyradio -filter:retweets AND -filter:replies s
 search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
 print(len(search_results))
 tweethist = []
-for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
-        try:
-            direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-            directtags = 1
-            print('\nSENT : @',tweet.user.screen_name,' - ',tweet.full_text)
-            #print(tweet.created_at)
+cc = 0
+if 1==0:
+    for tweet in search_results:
+        if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+            cc = cc + 1
+            print(str(cc),' - ',tweet.user.screen_name,'\n',tweet.full_text,'\n\n')
             tweethist.append(tweet.id_str)
 
-# Some basic error handling. Will print out why retweet failed, into your terminal.
-        except tweepy.TweepError as error:
-            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
-
-        except StopIteration:
-            break
-
-if(directtags == 1):
-    print('AstronomyRadio tags done\n---\n')
-    direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Direct Tags Done\n---\n') 
-# print(len(search_results))
-# keys =['radio','astronomy','galaxy']
-# key = '%2C'.join(keys)
+    if(directtags == 1):
+        print('AstronomyRadio tags done\n---\n')
+        # direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Direct Tags Done\n---\n') 
+    # print(len(search_results))
+    # keys =['radio','astronomy','galaxy']
+    # key = '%2C'.join(keys)
 
 
-# ======================================================================================== 
-#                                          _      _____                          _     
-#     /\                                  | |    / ____|                        | |    
-#    /  \    ___  ___  ___   _   _  _ __  | |_  | (___    ___   __ _  _ __  ___ | |__  
-#   / /\ \  / __|/ __|/ _ \ | | | || '_ \ | __|  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
-#  / ____ \| (__| (__| (_) || |_| || | | || |_   ____) ||  __/| (_| || |  | (__ | | | |
-# /_/    \_\\___|\___|\___/  \__,_||_| |_| \__| |_____/  \___| \__,_||_|   \___||_| |_|
-#
-# ========================================================================================
-                                                                                                                                                                            
-accsearch = 0
-# Search for tagging
-# (from:TheNRAO OR from:,ICRAR, OR from:SKA_telescope, OR from:ASTRON_NL, OR from:IRA_INAF, OR from:GreenBankObserv, OR from:NCRA_Outreach, OR from:LOFAR, OR from:OgNimaeb, OR from:ColourfulCosmos, OR from:mwatelescope)
-print('Specific account search')
-accounts = ['ASTRON_NL', 'GreenBankObserv', 'ICRAR', 'IRA_INAF', 'jivevlbi', 'LOFAR', 'mwatelescope', 'NCRA_Outreach', 'SKA_telescope', 'TheNRAO']
-acckeys = ', OR from:'.join(accounts)
-key = acckeys+' -filter:retweets AND -filter:replies since:'+lastmsgcutoff
-search_results = []
-search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
-print(len(search_results))
-tweethist = []
-for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
-        try:
-            direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-            accsearch = 1
-            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
-            #print(tweet.created_at)
+    # ======================================================================================== 
+    #                                          _      _____                          _     
+    #     /\                                  | |    / ____|                        | |    
+    #    /  \    ___  ___  ___   _   _  _ __  | |_  | (___    ___   __ _  _ __  ___ | |__  
+    #   / /\ \  / __|/ __|/ _ \ | | | || '_ \ | __|  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
+    #  / ____ \| (__| (__| (_) || |_| || | | || |_   ____) ||  __/| (_| || |  | (__ | | | |
+    # /_/    \_\\___|\___|\___/  \__,_||_| |_| \__| |_____/  \___| \__,_||_|   \___||_| |_|
+    #
+    # ========================================================================================
+                                                                                                                                                                                
+    accsearch = 0
+    # Search for tagging
+    # (from:TheNRAO OR from:,ICRAR, OR from:SKA_telescope, OR from:ASTRON_NL, OR from:IRA_INAF, OR from:GreenBankObserv, OR from:NCRA_Outreach, OR from:LOFAR, OR from:OgNimaeb, OR from:ColourfulCosmos, OR from:mwatelescope)
+    print('Specific account search')
+    accounts = ['ASTRON_NL', 'GreenBankObserv', 'ICRAR', 'IRA_INAF', 'jivevlbi', 'LOFAR', 'mwatelescope', 'NCRA_Outreach', 'SKA_telescope', 'TheNRAO']
+    acckeys = ', OR from:'.join(accounts)
+    key = acckeys+' -filter:retweets AND -filter:replies since:'+lastmsgcutoff
+    search_results = []
+    search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
+    print(len(search_results))
+    tweethist = []
+    for tweet in search_results:
+        if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+            cc = cc + 1
+            print(str(cc),' - ',tweet.user.screen_name,'\n',tweet.full_text,'\n\n')
             tweethist.append(tweet.id_str)
 
-# Some basic error handling. Will print out why retweet failed, into your terminal.
-        except tweepy.TweepError as error:
-            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
-
-        except StopIteration:
-            break
-
-if(accsearch == 1):
-    print('AstronomyRadio tags done\n---\n')
-    direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Account Searches Done\n---\n') 
+    if(accsearch == 1):
+        print('AstronomyRadio tags done\n---\n')
+        # direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Account Searches Done\n---\n') 
 
 
-# ======================================================================================== 
-#  _    _              _      _                   _____                          _     
-# | |  | |            | |    | |                 / ____|                        | |    
-# | |__| |  __ _  ___ | |__  | |_  __ _   __ _  | (___    ___   __ _  _ __  ___ | |__  
-# |  __  | / _` |/ __|| '_ \ | __|/ _` | / _` |  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
-# | |  | || (_| |\__ \| | | || |_| (_| || (_| |  ____) ||  __/| (_| || |  | (__ | | | |
-# |_|  |_| \__,_||___/|_| |_| \__|\__,_| \__, | |_____/  \___| \__,_||_|   \___||_| |_|
-#                                         __/ |                                        
-#                                        |___/                                         
-# ======================================================================================== 
+    # ======================================================================================== 
+    #  _    _              _      _                   _____                          _     
+    # | |  | |            | |    | |                 / ____|                        | |    
+    # | |__| |  __ _  ___ | |__  | |_  __ _   __ _  | (___    ___   __ _  _ __  ___ | |__  
+    # |  __  | / _` |/ __|| '_ \ | __|/ _` | / _` |  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
+    # | |  | || (_| |\__ \| | | || |_| (_| || (_| |  ____) ||  __/| (_| || |  | (__ | | | |
+    # |_|  |_| \__,_||___/|_| |_| \__|\__,_| \__, | |_____/  \___| \__,_||_|   \___||_| |_|
+    #                                         __/ |                                        
+    #                                        |___/                                         
+    # ======================================================================================== 
 
 
-# print(len(search_results))
-# keys =['radio','astronomy','galaxy']
-# key = '%2C'.join(keys)
-# HASTAG SEARCH #haiku #poetry %23haiku+%23poetry
-print('hashtag search')
-key = 'astronomyradio OR radioastronomy OR RadioAstronomy OR RadioAstrophysics OR radioastrophysics OR RadioTelescope OR radiotelescope '+filtertags+' since:'+lastmsgcutoff
-search_results = []
-hashtagsearch = 0
-search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
-for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
-        try:
-            direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-            hashtagsearch = 1
-            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
-            #print(tweet.created_at)
+    # print(len(search_results))
+    # keys =['radio','astronomy','galaxy']
+    # key = '%2C'.join(keys)
+    # HASTAG SEARCH #haiku #poetry %23haiku+%23poetry
+    print('hashtag search')
+    key = 'astronomyradio OR radioastronomy OR RadioAstronomy OR RadioAstrophysics OR radioastrophysics OR RadioTelescope OR radiotelescope '+filtertags+' since:'+lastmsgcutoff
+    search_results = []
+    hashtagsearch = 0
+    search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
+    for tweet in search_results:
+        if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+            cc = cc + 1
+            print(str(cc),' - ',tweet.user.screen_name,'\n',tweet.full_text,'\n\n')
             tweethist.append(tweet.id_str)
 
-# Some basic error handling. Will print out why retweet failed, into your terminal.
-        except tweepy.TweepError as error:
-            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
-
-        except StopIteration:
-            break
-
-print(len(search_results))
-if(hashtagsearch == 1):
-    print('Hashtag searches done\n---\n')
-    direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Hashtag searching Done\n---\n') 
+    print(len(search_results))
+    if(hashtagsearch == 1):
+        print('Hashtag searches done\n---\n')
+    # direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Hashtag searching Done\n---\n') 
 
 # ======================================================================================== 
 #   ____          _          _____             _  _        
@@ -266,6 +238,8 @@ print('\nTotal Results : ',str(len(search_results)))
 
 #  and (lastmsgdt < tweet.created_at) 
 # tweethist = [] # Set to commented after testing done
+fultxts = []
+tweethist = []
 for tweet in search_results:
     if (not tweet.retweeted) and ('radio' in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (tweet.user.screen_name.lower() not in blockedaccs) :
         nfound = 1
@@ -274,20 +248,12 @@ for tweet in search_results:
                 nfound = 0
                 break
         if nfound:
-            try:
-                direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-                print('\nSENT : @',tweet.user.screen_name,' - ',tweet.full_text)
-                #print(tweet.created_at)
-                tweethist.append(tweet.id_str)
-
-            # Some basic error handling. Will print out why retweet failed, into your terminal.
-            except tweepy.TweepError as error:
-                print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
-
-            except StopIteration:
-                break
+            cc = cc + 1
+            fultxts.append(tweet.full_text)
+            # print(str(cc),' - ',tweet.user.screen_name,'\n',tweet.full_text,'\n\n')
+            tweethist.append(tweet.id_str)
 
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")   
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))) 
+# direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))) 
 print('\nEnd bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))) 
