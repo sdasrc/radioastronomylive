@@ -58,12 +58,12 @@ ignoretags = ' -'+ignoretags+' '
 directtags = 0
 # Search for tagging
 print('Tags search')
-key = '@astronomyradio OR #astronomyradio -filter:retweets AND -filter:replies since:'+lastmsgcutoff
+key = '@radioastrolive OR @radioastronlive OR #radioastrolive OR #radioastronlive OR #astronomyradio OR @astronomyradio OR #astronomyradio -filter:retweets AND -filter:replies since:'+lastmsgcutoff
 search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
 print(len(search_results))
 tweethist = []
 for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == MYACCOUNT) :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             directtags = 1
@@ -108,7 +108,7 @@ search_results = search_results + api.search(q=key, count=searchcount,tweet_mode
 print(len(search_results))
 tweethist = []
 for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == MYACCOUNT) :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             accsearch = 1
@@ -145,12 +145,12 @@ if(accsearch == 1):
 # key = '%2C'.join(keys)
 # HASTAG SEARCH #haiku #poetry %23haiku+%23poetry
 print('hashtag search')
-key = 'astronomyradio OR radioastronomy OR RadioAstronomy OR RadioAstrophysics OR radioastrophysics OR RadioTelescope OR radiotelescope '+filtertags+' since:'+lastmsgcutoff
+key = 'astronomyradio OR radioastronomy OR radioastrolive OR radioastronlive  OR RadioAstronomy OR RadioAstrophysics OR radioastrophysics OR RadioTelescope OR radiotelescope '+filtertags+' since:'+lastmsgcutoff
 search_results = []
 hashtagsearch = 0
 search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
 for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == 'astronomyradio') :
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == MYACCOUNT) :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             hashtagsearch = 1
