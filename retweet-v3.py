@@ -18,6 +18,10 @@ ACCESS_KEY = environ['ACCESS_KEY']
 ACCESS_SECRET = environ['ACCESS_SECRET']
 ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
 
+
+MYACCOUNT = 'radioastronlive'
+blockedaccs.append(MYACCOUNT)
+
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
@@ -58,7 +62,7 @@ ignoretags = ' -'+ignoretags+' '
 directtags = 0
 # Search for tagging
 print('Tags search')
-key = '@radioastrolive OR @radioastronlive OR #radioastrolive OR #radioastronlive OR #astronomyradio OR @astronomyradio OR #astronomyradio -filter:retweets AND -filter:replies since:'+lastmsgcutoff
+key = '@radioastronlive OR #radioastrolive OR #radioastronlive OR @astronomyradio OR #astronomyradio -filter:retweets AND -filter:replies since:'+lastmsgcutoff
 search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
 print(len(search_results))
 tweethist = []
