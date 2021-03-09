@@ -1,3 +1,5 @@
+from urllib.request import urlopen
+
 ignoretagarr = []
 for line in urlopen(IGNORETAGFILE):
     currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
