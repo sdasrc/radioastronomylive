@@ -1,4 +1,3 @@
-from urllib.request import urlopen
 
 ignoretagarr = []
 for line in urlopen(IGNORETAGFILE):
