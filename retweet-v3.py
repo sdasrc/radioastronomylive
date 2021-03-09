@@ -6,8 +6,6 @@
 import tweepy
 from time import sleep
 from datetime import datetime, timedelta
-from urllib.request import urlopen
-from filters import *
 import splitarr
 
 # from keys import *
@@ -17,6 +15,8 @@ CONSUMER_SECRET = environ['CONSUMER_SECRET']
 ACCESS_KEY = environ['ACCESS_KEY']
 ACCESS_SECRET = environ['ACCESS_SECRET']
 ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
+
+from filters import *
 
 MYACCOUNT = 'radioastronlive'
 blockedaccs.append(MYACCOUNT)
