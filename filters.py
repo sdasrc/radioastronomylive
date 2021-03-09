@@ -1,9 +1,17 @@
-# tags to be ignored while searching for tweets
+ignoretagarr = []
+for line in urllib.request.urlopen(IGNORETAGFILE):
+    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
+    currline = currline.replace('\n','')
+    ignoretagarr.append(currline.replace('%20%',' '))
 
-ignoretagarr = ['album', 'amzn', 'broadcast', 'buy', 'fm', 'fmradio', 'groove', 'listen', 'mixcloud', 'music', 'nowplaying', 'paranormal', 'play', 'playing', 'song', 'soundcloud', 'spotify', 'streamcloud', 'streaming', 'track']
+blockedaccs = []
+for line in urllib.request.urlopen(BLOCKUSERFILE):
+    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
+    currline = currline.replace('\n','')
+    blockedaccs.append(currline.replace('%20%',' '))
 
-# dont iterate over tweets from these accounts in search results, while sending
-blockedaccs = ['_savage_nymph_', 'colinfirth_', 'dearestherbot', 'epi_em_', 'fkittlerbot', 'gregbruhl3', 'iacobellist', 'nbcnamibia', 'oneluckygirl_28', 'only_rock_radio', 'para_science_', 'radio_caravan', 'radiofreecoven1', 'spirit_n_angels', 'stwosonline1', 'teufeurs_eu', 'tommybrain', 'whendeadspeak' ,'xzoneradiotv']
-
-# filter tweets in search results containing these keywords, while sending
-filteredkeys = ['rt @', 'album', 'buy', 'college radio', ' dj ', 'dj ', ' dj', 'emergency radio', 'feedback radio', ' fm ', 'fm ', 'fmradio', 'groove', 'internet radio', 'jet grind radio', 'jet set radio','jetsetradio', 'jet_set_radio', 'mixcloud', 'music', 'now playing', 'numerology', 'palace radio', 'paranormal', 'planet radio', 'play', 'playing', 'playlist', 'radio broadcast', 'radio channel', 'radio communication', 'radio host', 'radio list', 'radio mix', 'radio now', 'radio program', 'radio right now', 'radio request', 'radio show', 'radio star', 'radio station', 'radio times', 'radio today', 'solar radio','solarradio','solar_radio', 'song', 'soundcloud', 'spotify','streaming', 'streamcloud', 'talk radio', 'track', 'weather radio', 'universe radio']
+filteredkeys = []
+for line in urllib.request.urlopen(BLOCKWORDFILE):
+    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
+    currline = currline.replace('\n','')
+    filteredkeys.append(currline.replace('%20%',' '))        
