@@ -6,7 +6,7 @@
 import tweepy
 from time import sleep
 from datetime import datetime, timedelta
-import urllib.request  # the lib that handles the url stuff
+from urllib.request import urlopen
 from filters import *
 import splitarr
 
