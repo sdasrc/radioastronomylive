@@ -1,4 +1,3 @@
 Flask
 heroku
 tweepy
-urllib
