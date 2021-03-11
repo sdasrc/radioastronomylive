@@ -20,6 +20,7 @@ ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
 BLOCKUSERFILE = environ['BLOCKUSERFILE']
 BLOCKWORDFILE = environ['BLOCKWORDFILE']
 IGNORETAGFILE = environ['IGNORETAGFILE']
+DIRECTACCFILE = environ['DIRECTACCFILE']
 
 
 ignoretagarr = []
@@ -128,7 +129,12 @@ accsearch = 0
 # Search for tagging
 # (from:TheNRAO OR from:,ICRAR, OR from:SKA_telescope, OR from:ASTRON_NL, OR from:IRA_INAF, OR from:GreenBankObserv, OR from:NCRA_Outreach, OR from:LOFAR, OR from:OgNimaeb, OR from:ColourfulCosmos, OR from:mwatelescope)
 print('Specific account search')
-accounts = ['ASTRON_NL', 'GreenBankObserv', 'ICRAR', 'IRA_INAF', 'jivevlbi', 'LOFAR', 'mwatelescope', 'NCRA_Outreach', 'SKA_telescope', 'TheNRAO']
+accounts = []
+for line in urlopen(DIRECTACCFILE):
+    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
+    currline = currline.replace('\n','')
+    accounts.append(currline.replace('%20%',' '))       
+
 acckeys = ', OR from:'.join(accounts)
 key = acckeys+' -filter:retweets AND -filter:replies since:'+lastmsgcutoff
 search_results = []
