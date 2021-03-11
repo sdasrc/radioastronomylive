@@ -6,9 +6,7 @@
 import tweepy
 from time import sleep
 from datetime import datetime, timedelta
-import splitarr
-from urllib.request import urlopen
-
+import rtbottools
 
 # from keys import *
 from os import environ
@@ -23,24 +21,9 @@ IGNORETAGFILE = environ['IGNORETAGFILE']
 DIRECTACCFILE = environ['DIRECTACCFILE']
 
 
-ignoretagarr = []
-for line in urlopen(IGNORETAGFILE):
-    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
-    currline = currline.replace('\n','')
-    ignoretagarr.append(currline.replace('%20%',' '))
-
-blockedaccs = []
-for line in urlopen(BLOCKUSERFILE):
-    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
-    currline = currline.replace('\n','')
-    blockedaccs.append(currline.replace('%20%',' '))
-
-filteredkeys = []
-for line in urlopen(BLOCKWORDFILE):
-    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
-    currline = currline.replace('\n','')
-    filteredkeys.append(currline.replace('%20%',' '))        
-
+ignoretagarr = rtbottools.getarrayfromgit(IGNORETAGFILE)
+blockedaccs = rtbottools.getarrayfromgit(BLOCKUSERFILE)
+filteredkeys = rtbottools.getarrayfromgit(BLOCKWORDFILE)
 
 # from filters import *
 
@@ -129,11 +112,7 @@ accsearch = 0
 # Search for tagging
 # (from:TheNRAO OR from:,ICRAR, OR from:SKA_telescope, OR from:ASTRON_NL, OR from:IRA_INAF, OR from:GreenBankObserv, OR from:NCRA_Outreach, OR from:LOFAR, OR from:OgNimaeb, OR from:ColourfulCosmos, OR from:mwatelescope)
 print('Specific account search')
-accounts = []
-for line in urlopen(DIRECTACCFILE):
-    currline = line.decode('utf-8') #utf-8 or iso8859-1 or whatever the page encoding scheme is
-    currline = currline.replace('\n','')
-    accounts.append(currline.replace('%20%',' '))       
+accounts = rtbottools.getarrayfromgit(DIRECTACCFILE)   
 
 acckeys = ', OR from:'.join(accounts)
 key = acckeys+' -filter:retweets AND -filter:replies since:'+lastmsgcutoff
@@ -142,7 +121,7 @@ search_results = search_results + api.search(q=key, count=searchcount,tweet_mode
 print(len(search_results))
 tweethist = []
 for tweet in search_results:
-    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == MYACCOUNT) :
+    if (not tweet.retweeted) and ('rt @' not in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (not tweet.user.screen_name.lower() == MYACCOUNT.lower()) :
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             accsearch = 1
@@ -228,7 +207,7 @@ breakarr = breakarr - 1
 search_results = []
 print('only radio')
 taglist = ['aas','astrochemistry', 'astronomer', 'astronomy', 'astrophoto', 'astrophysics', 'black hole', 'black-hole', 'blackhole', 'blazar', 'burst', 'chandra', 'cosmology', 'exoplanet', 'extragalactic', 'gmrt', 'gravitation', 'infrared', 'interferometric', 'interferometry', 'iras', 'lofar', 'magnetar', 'mpifr', 'NGC', 'nrao', 'nuclei', 'optical', 'quasar', 'spectroscopic', 'spectroscopy', 'starform', 'synchrotron', 'UGC', 'vlbi']
-tagarr = splitarr.splitarr(taglist,breakarr) 
+tagarr = rtbottools.splitarr(taglist,breakarr) 
 for tags in tagarr:
     srctag = ', OR '.join(tags)
     key = 'radio, ('+srctag+')  '+ignoretags+'  '+filtertags+'since:'+lastmsgcutoff
@@ -249,7 +228,7 @@ print('Radio Astronomy Science Paper')
 secondtaglist = ['arxiv','astronomer','astronomy','astrophysics','eso','mnras','object','observation','paper','research','science','signal','source','ursi','u.r.s.i']
 secondtags = ', OR '.join(secondtaglist)
 taglist = ['agn', 'breakthrough', 'calibration', 'chemistry', 'cluster', 'conference', 'corona', 'cosmic', 'dark', 'einstein', 'energy', 'epoch', 'evolution', 'feedback', 'galactic', 'galaxies', 'galaxy', 'gravity', 'history', 'horizon', 'image', 'jet', 'milky', 'moon', 'nebula', 'neutrino', 'newton', 'nobel', 'planet', 'pulsar', 'relativity', 'satellite', 'simulation', 'ska', 'smbh', 'solar' , 'space', 'spectral', 'star', 'stellar', 'structure', 'sun', 'supernova', 'survey', 'universe', 'vla', 'wide', 'x-ray', 'xray']
-tagarr = splitarr.splitarr(taglist,breakarr) 
+tagarr = rtbottools.splitarr(taglist,breakarr) 
 for tags in tagarr:
     srctag = ', OR '.join(tags)
     key = 'radio, ('+secondtags+'), ('+srctag+')  '+ignoretags+'  '+filtertags+'since:'+lastmsgcutoff
@@ -270,7 +249,7 @@ print('Radio Use Cases')
 secondtaglist = ['3c', 'atca', 'breakthrough', 'calibration', 'chemistry', 'conference', 'csiro', 'dynamics', 'history', 'image', 'images', 'imaging', 'inaf', 'star', 'stellar']
 secondtags = ', OR '.join(secondtaglist)
 taglist = ['agn', 'cluster', 'corona', 'cosmic', 'dark', 'einstein', 'epoch', 'evolution', 'feedback', 'galactic', 'galaxies', 'galaxy', 'gravity', 'horizon', 'jet', 'milky', 'moon', 'nebula', 'neutrino', 'newton', 'planet', 'pulsar', 'relativity', 'smbh', 'solar' , 'supernova']
-tagarr = splitarr.splitarr(taglist,breakarr) 
+tagarr = rtbottools.splitarr(taglist,breakarr) 
 for tags in tagarr:
     srctag = ', OR '.join(tags)
     key = 'radio, ('+secondtags+'), ('+srctag+')  '+ignoretags+'  '+filtertags+'since:'+lastmsgcutoff
