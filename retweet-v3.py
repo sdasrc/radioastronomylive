@@ -6,6 +6,7 @@
 import tweepy
 from time import sleep
 from datetime import datetime, timedelta
+from dateutil.tz import gettz
 import rtbottools
 
 # from keys import *
@@ -305,11 +306,13 @@ for tweet in search_results:
         else: 
             filteredout = filteredout + 1
             tfultext = tweet.full_text.replace('\n','... ')
-            filtertweet = filtertweet + '('+str(filteredout)+') '+tweet.user.screen_name+' : '+tfultext+'\n'
+            filtertweet = filtertweet + '['+str(filteredout)+'] '+tweet.user.screen_name+' : '+tfultext+'\n'
             print('\n [ ] FILTERED : @',tweet.user.screen_name,' - ',tweet.full_text)
 
-now = datetime.now()
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")   
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.') 
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet) 
+now = datetime.now(tz=gettz('Asia/Kolkata'))
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")       
+direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.\n') 
+if filteredout > 0:
+    direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet) 
+direct_message = api.send_direct_message(ASTRO_RADIO_UID, '------------\n')
 print('\nEnd bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.') 
