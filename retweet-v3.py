@@ -280,12 +280,12 @@ print('\nTotal Results : ',str(len(search_results)))
 #  and (lastmsgdt < tweet.created_at) 
 # tweethist = [] # Set to commented after testing done
 filteredout = 0
+filtertweet = 'List of Filtered Tweets\n'
 for tweet in search_results:
     if (not tweet.retweeted) and ('radio' in tweet.full_text.lower()) and ( tweet.id_str not in tweethist ) and (lastmsgdt < tweet.created_at)  and (not tweet.in_reply_to_status_id) and (tweet.user.screen_name.lower() not in blockedaccs) :
         nfound = 1
         for filteredkey in filteredkeys:
             if filteredkey.lower() in tweet.full_text.lower():
-                filteredout = filteredout + 1
                 nfound = 0
                 break
         if nfound:
@@ -303,9 +303,12 @@ for tweet in search_results:
                 break
 
         else: 
+            filteredout = filteredout + 1
+            filtertweet = filtertweet + '('+str(filteredout)+') '+tweet.user.screen_name+' - '+tweet.full_text+'\n'
             print('\n [ ] FILTERED : @',tweet.user.screen_name,' - ',tweet.full_text)
 
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")   
 direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.') 
+direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet) 
 print('\nEnd bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.') 
