@@ -79,7 +79,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             directtags = 1
-            print('\nSENT : @',tweet.user.screen_name,' - ',tweet.full_text)
+            print('\n [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
@@ -125,7 +125,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             accsearch = 1
-            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
+            print(' [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
@@ -167,7 +167,7 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             hashtagsearch = 1
-            print('SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
+            print(' [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
@@ -291,7 +291,7 @@ for tweet in search_results:
         if nfound:
             try:
                 direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-                print('\nSENT : @',tweet.user.screen_name,' - ',tweet.full_text)
+                print('\n [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text)
                 #print(tweet.created_at)
                 tweethist.append(tweet.id_str)
 
@@ -301,6 +301,9 @@ for tweet in search_results:
 
             except StopIteration:
                 break
+
+        else: 
+            print('\n [ ] FILTERED : @',tweet.user.screen_name,' - ',tweet.full_text)
 
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")   
