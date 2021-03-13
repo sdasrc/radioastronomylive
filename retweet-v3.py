@@ -313,5 +313,5 @@ now = datetime.now(tz=gettz('Asia/Kolkata'))
 dt_string = now.strftime("%d/%m %H:%M")      
 if filteredout > 0:
     direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet)  
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, dt_string+'. [v] '+str(len(tweethist))+'/'+str(len(search_results))+' [  ] '+str(filteredout)) 
+direct_message = api.send_direct_message(ASTRO_RADIO_UID, dt_string+'. [v] '+str(len(tweethist))+'/'+str(len(search_results))+' [x] '+str(filteredout)) 
 print('\neor@'+dt_string+'. [v] '+str(len(tweethist))+'/'+str(len(search_results))+' [  ] '+str(filteredout)+'.') 
