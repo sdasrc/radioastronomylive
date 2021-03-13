@@ -80,13 +80,13 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             directtags = 1
-            print('\n [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
+            print('\n[v] ',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
 # Some basic error handling. Will print out why retweet failed, into your terminal.
         except tweepy.TweepError as error:
-            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+            print('[!] ' + tweet.user.screen_name + ' : '+error.reason)
 
         except StopIteration:
             break
@@ -126,13 +126,13 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             accsearch = 1
-            print(' [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
+            print('[v] ',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
 # Some basic error handling. Will print out why retweet failed, into your terminal.
         except tweepy.TweepError as error:
-            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+            print('[!] ' + tweet.user.screen_name + ' : '+error.reason)
 
         except StopIteration:
             break
@@ -168,13 +168,13 @@ for tweet in search_results:
         try:
             direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
             hashtagsearch = 1
-            print(' [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
+            print('[v] ',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
             #print(tweet.created_at)
             tweethist.append(tweet.id_str)
 
 # Some basic error handling. Will print out why retweet failed, into your terminal.
         except tweepy.TweepError as error:
-            print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+            print('[!] ' + tweet.user.screen_name + ' : '+error.reason)
 
         except StopIteration:
             break
@@ -292,13 +292,13 @@ for tweet in search_results:
         if nfound:
             try:
                 direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'https://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id_str) 
-                print('\n [v] SENT : @',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
+                print('\n[v] ',tweet.user.screen_name,' - ',tweet.full_text.replace('\n','... '))
                 #print(tweet.created_at)
                 tweethist.append(tweet.id_str)
 
             # Some basic error handling. Will print out why retweet failed, into your terminal.
             except tweepy.TweepError as error:
-                print('FAILED : @' + tweet.user.screen_name + ' : '+error.reason)
+                print('[!] ' + tweet.user.screen_name + ' : '+error.reason)
 
             except StopIteration:
                 break
@@ -307,12 +307,11 @@ for tweet in search_results:
             filteredout = filteredout + 1
             tfultext = tweet.full_text.replace('\n','... ')
             filtertweet = filtertweet + '['+str(filteredout)+'] '+tweet.user.screen_name+' : '+tfultext+'\n'
-            print('\n [ ] FILTERED : @',tweet.user.screen_name,' - ',tweet.full_text)
+            print('\n[ ] ',tweet.user.screen_name,' - ',tweet.full_text)
 
 now = datetime.now(tz=gettz('Asia/Kolkata'))
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")       
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'End bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.\n') 
+dt_string = now.strftime("%d/%m %H:%M")      
 if filteredout > 0:
-    direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet) 
-direct_message = api.send_direct_message(ASTRO_RADIO_UID, '------------\n')
+    direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet)  
+direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'eor@ '+dt_string+'. [v] '+str(len(tweethist))+'/'+str(len(search_results))+'. [ ] '+str(filteredout)+'.') 
 print('\nEnd bot run at '+dt_string+'. Sent : '+str(len(tweethist))+'/'+str(len(search_results))+'. Filtered - '+str(filteredout)+'.') 
