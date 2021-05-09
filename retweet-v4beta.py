@@ -9,17 +9,17 @@ from datetime import datetime, timedelta
 from dateutil.tz import gettz
 import rtbottools
 
-# from keys import *
-from os import environ
-CONSUMER_KEY = environ['CONSUMER_KEY']
-CONSUMER_SECRET = environ['CONSUMER_SECRET']
-ACCESS_KEY = environ['ACCESS_KEY']
-ACCESS_SECRET = environ['ACCESS_SECRET']
-ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
-BLOCKUSERFILE = environ['BLOCKUSERFILE']
-BLOCKWORDFILE = environ['BLOCKWORDFILE']
-IGNORETAGFILE = environ['IGNORETAGFILE']
-DIRECTACCFILE = environ['DIRECTACCFILE']
+from keys import *
+# from os import environ
+# CONSUMER_KEY = environ['CONSUMER_KEY']
+# CONSUMER_SECRET = environ['CONSUMER_SECRET']
+# ACCESS_KEY = environ['ACCESS_KEY']
+# ACCESS_SECRET = environ['ACCESS_SECRET']
+# ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
+# BLOCKUSERFILE = environ['BLOCKUSERFILE']
+# BLOCKWORDFILE = environ['BLOCKWORDFILE']
+# IGNORETAGFILE = environ['IGNORETAGFILE']
+# DIRECTACCFILE = environ['DIRECTACCFILE']
 
 
 ignoretagarr = rtbottools.getarrayfromgit(IGNORETAGFILE)
@@ -40,14 +40,9 @@ retweetdone = 0 # Retweets done
 waittime = 10 # in seconds
 oldtweetdays = 1
 
-'''
-Use either the first two lines for picking up the last message sent time from twitter,
-or use the third line to specify a cutoff time manually
-'''
-lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)   # pickup last message sent time
+lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)
 lastmsg = int(lastmsg/1000)
-# lastmsg = datetime.timestamp(datetime(2021, 4, 19, 6, 21, 1)) # Uncomment this to use custom cutoff date time for tweets
-
+# lastmsg = datetime.timestamp(datetime(2021, 2, 30, 6, 21, 1)) # Uncomment this to use custom cutoff date time for tweets
 lastmsgdt = datetime.fromtimestamp(lastmsg)
 lastmsgcutoff = lastmsgdt - timedelta(days=oldtweetdays)
 lastmsgcutoff = lastmsgcutoff.strftime("%Y-%m-%d") 
@@ -316,7 +311,7 @@ for tweet in search_results:
 
 now = datetime.now(tz=gettz('Asia/Kolkata'))
 dt_string = now.strftime("%d/%m %H:%M")      
-# if filteredout > 0:
-#     direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet)  
+if filteredout > 0:
+    direct_message = api.send_direct_message(ASTRO_RADIO_UID, filtertweet)  
 direct_message = api.send_direct_message(ASTRO_RADIO_UID, dt_string+'. [v] '+str(len(tweethist))+'/'+str(len(search_results))+' [x] '+str(filteredout)) 
 print('\neor@'+dt_string+'. [v] '+str(len(tweethist))+'/'+str(len(search_results))+' [  ] '+str(filteredout)+'.') 
