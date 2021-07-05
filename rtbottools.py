@@ -1,8 +1,13 @@
+'''
+Set of functions to do essentials tasks needed for the retweetbot.
+'''
 from urllib.request import urlopen
 
+# Split an array into several components
+# Helpful since twitter only accepts a limited number of
+# search arguments.
 def splitarr(inparr, nn):
-    cc = 0 
-    outarr = [] 
+    cc, outarr = 0, [] 
     while cc < len(inparr): 
         dd = cc+nn if (cc+nn)<len(inparr) else len(inparr)
         outarr.append(inparr[cc:dd]) 
@@ -11,6 +16,9 @@ def splitarr(inparr, nn):
             break 
     return outarr
 
+# Retrieve arrays -- containing keywords to be ignored etc --
+# from text files on a PUBLIC github repo.
+# Can be generalized for any array stored only.
 def getarrayfromgit(GITFILENAME):
     outputarr = []
     for line in urlopen(GITFILENAME):

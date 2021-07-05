@@ -2,54 +2,66 @@
 # Written by Soumyadeep Das, IIT Varanasi, India.
 # Sunday 05 January 2021 08:11:11 PM IST
 # License: MIT License.
+# List of radio telescopes
+# https://en.wikipedia.org/wiki/List_of_radio_telescopes
 
 import tweepy
 from time import sleep
 from datetime import datetime, timedelta
 from dateutil.tz import gettz
-import rtbottools
+import rtbottools     # Essential custommade functions
 
-# from keys import *
-from os import environ
-CONSUMER_KEY = environ['CONSUMER_KEY']
-CONSUMER_SECRET = environ['CONSUMER_SECRET']
-ACCESS_KEY = environ['ACCESS_KEY']
-ACCESS_SECRET = environ['ACCESS_SECRET']
-ASTRO_RADIO_UID = environ['ASTRO_RADIO_UID']
-BLOCKUSERFILE = environ['BLOCKUSERFILE']
-BLOCKWORDFILE = environ['BLOCKWORDFILE']
-IGNORETAGFILE = environ['IGNORETAGFILE']
-DIRECTACCFILE = environ['DIRECTACCFILE']
+# Import from keys if you are running locally. Import from 
+# environment variables (envvars) if you are running on a 
+# remote machine, like Heroku.
+localrun = True
 
+if localrun: from keys import * 
+else: from envvars import *    
 
+# Retrieve arrays containing blocked accounts and ignored 
+# keywords from the public github repo
+# https://github.com/sdasrc/radioastronomylive-filters
 ignoretagarr = rtbottools.getarrayfromgit(IGNORETAGFILE)
 blockedaccs = rtbottools.getarrayfromgit(BLOCKUSERFILE)
 filteredkeys = rtbottools.getarrayfromgit(BLOCKWORDFILE)
+topiclist = rtbottools.getarrayfromgit(TOPICFILE)
+techniquelist = rtbottools.getarrayfromgit(TECHNIQUEFILE)
+publishlist = rtbottools.getarrayfromgit(PUBLISHFILE)
 
-# from filters import *
-
+# I dont want my posts to come up again
 MYACCOUNT = 'radioastronlive'
-blockedaccs.append(MYACCOUNT)
+blockedaccs.append(MYACCOUNT) 
 
+# Authenticating with twitter api
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
+# I will search for at max 200 tweets per round, which are less
+# than 1 day old. 
+# I will wait for 10 seconds before sending each message
 searchcount = 200 # Number of tweets to search for in each round
 retweetdone = 0 # Retweets done
 waittime = 10 # in seconds
-oldtweetdays = 1
+oldtweetdays = 1 # Upto how many days in past should I search
 
-'''
-Use either the first two lines for picking up the last message sent time from twitter,
-or use the third line to specify a cutoff time manually
-'''
-lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)   # pickup last message sent time
-lastmsg = int(lastmsg/1000)
-# lastmsg = datetime.timestamp(datetime(2021, 4, 19, 6, 21, 1)) # Uncomment this to use custom cutoff date time for tweets
+# Retrieve last message received time from twitter or
+# specify a custom time yourself.
+# This time is used to determine the time cutoff, only messages
+# sent after the time cutoff are considered
+specifycutoffmsgtime = True
 
+if specifycutoffmsgtime:
+    lastmsg = datetime.timestamp(datetime(2021, 7, 3, 11, 11, 1)) 
+else:
+    lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)//1000
+
+# Get a cutoff date in YYYY-MM-DD
 lastmsgdt = datetime.fromtimestamp(lastmsg)
 lastmsgcutoff = lastmsgdt - timedelta(days=oldtweetdays)
+
+print(lastmsgcutoff.strftime("Last msg from %Y-%m-%d %H:%M"))
 lastmsgcutoff = lastmsgcutoff.strftime("%Y-%m-%d") 
 
 # Create an empty array to which search results will be ADDED
@@ -60,18 +72,9 @@ breakarr = 6
 ignoretags = ' -'.join(ignoretagarr)
 ignoretags = ' -'+ignoretags+' '
 
-# https://www.patorjk.com/software/taag/#p=display&h=1&f=Big&t=Direct%20Tagging
-
-# =================================================================================
-#   _____   _                   _     _______                    _               
-#  |  __ \ (_)                 | |   |__   __|                  (_)              
-#  | |  | | _  _ __  ___   ___ | |_     | |  __ _   __ _   __ _  _  _ __    __ _ 
-#  | |  | || || '__|/ _ \ / __|| __|    | | / _` | / _` | / _` || || '_ \  / _` |
-#  | |__| || || |  |  __/| (__ | |_     | || (_| || (_| || (_| || || | | || (_| |
-#  |_____/ |_||_|   \___| \___| \__|    |_| \__,_| \__, | \__, ||_||_| |_| \__, |
-#                                                   __/ |  __/ |            __/ |
-#                                                  |___/  |___/            |___/ 
-# =================================================================================
+# -----------------------------------------
+# ACTUAL SEARCHING BEGINS HERE 
+# -----------------------------------------
 
 directtags = 0
 # Search for tagging
@@ -104,15 +107,9 @@ if(directtags == 1):
 # key = '%2C'.join(keys)
 
 
-# ======================================================================================== 
-#                                          _      _____                          _     
-#     /\                                  | |    / ____|                        | |    
-#    /  \    ___  ___  ___   _   _  _ __  | |_  | (___    ___   __ _  _ __  ___ | |__  
-#   / /\ \  / __|/ __|/ _ \ | | | || '_ \ | __|  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
-#  / ____ \| (__| (__| (_) || |_| || | | || |_   ____) ||  __/| (_| || |  | (__ | | | |
-# /_/    \_\\___|\___|\___/  \__,_||_| |_| \__| |_____/  \___| \__,_||_|   \___||_| |_|
-#
-# ========================================================================================
+# -----------------------------------------
+#     ACCOUNT SEARCHES
+# -----------------------------------------
                                                                                                                                                                             
 accsearch = 0
 # Search for tagging
@@ -147,16 +144,9 @@ if(accsearch == 1):
     direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Account Searches Done\n---\n') 
 
 
-# ======================================================================================== 
-#  _    _              _      _                   _____                          _     
-# | |  | |            | |    | |                 / ____|                        | |    
-# | |__| |  __ _  ___ | |__  | |_  __ _   __ _  | (___    ___   __ _  _ __  ___ | |__  
-# |  __  | / _` |/ __|| '_ \ | __|/ _` | / _` |  \___ \  / _ \ / _` || '__|/ __|| '_ \ 
-# | |  | || (_| |\__ \| | | || |_| (_| || (_| |  ____) ||  __/| (_| || |  | (__ | | | |
-# |_|  |_| \__,_||___/|_| |_| \__|\__,_| \__, | |_____/  \___| \__,_||_|   \___||_| |_|
-#                                         __/ |                                        
-#                                        |___/                                         
-# ======================================================================================== 
+# -----------------------------------------
+#     HASHTAG SEARCHING
+# -----------------------------------------
 
 
 # print(len(search_results))
@@ -189,16 +179,9 @@ if(hashtagsearch == 1):
     print('Hashtag searches done\n---\n')
     direct_message = api.send_direct_message(ASTRO_RADIO_UID, 'Hashtag searching Done\n---\n') 
 
-# ======================================================================================== 
-#   ____          _          _____             _  _        
-#  / __ \        | |        |  __ \           | |(_)       
-# | |  | | _ __  | | _   _  | |__) | __ _   __| | _   ___  
-# | |  | || '_ \ | || | | | |  _  / / _` | / _` || | / _ \ 
-# | |__| || | | || || |_| | | | \ \| (_| || (_| || || (_) |
-#  \____/ |_| |_||_| \__, | |_|  \_\\__,_| \__,_||_| \___/ 
-#                     __/ |                                
-#                    |___/                                 
-# ======================================================================================== 
+# -----------------------------------------
+#      ONLY RADIO SEARCH
+# -----------------------------------------
 
 
 # radio, astronomy (galaxy, OR agn, OR pulsar, OR nebula)
@@ -220,14 +203,9 @@ for tags in tagarr:
     search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
     print(len(search_results))
 
-# ======================================================================================== 
-#  _____             _  _          _____                                     _     
-# |  __ \           | |(_)        |  __ \                                   | |    
-# | |__) | __ _   __| | _   ___   | |__) | ___  ___   ___   __ _  _ __  ___ | |__  
-# |  _  / / _` | / _` || | / _ \  |  _  / / _ \/ __| / _ \ / _` || '__|/ __|| '_ \ 
-# | | \ \| (_| || (_| || || (_) | | | \ \|  __/\__ \|  __/| (_| || |  | (__ | | | |
-# |_|  \_\\__,_| \__,_||_| \___/  |_|  \_\\___||___/ \___| \__,_||_|   \___||_| |_|
-# ======================================================================================== 
+# -----------------------------------------
+#      RADIO RESEARCH
+# -----------------------------------------
 
 # Radio Astronomy Science Paper
 print('Radio Astronomy Science Paper')
@@ -241,14 +219,9 @@ for tags in tagarr:
     search_results = search_results + api.search(q=key, count=searchcount,tweet_mode='extended')
     print(len(search_results))
 
-# ======================================================================================== 
-#  _____             _  _          _    _               _____                  
-# |  __ \           | |(_)        | |  | |             / ____|                 
-# | |__) | __ _   __| | _   ___   | |  | | ___   ___  | |      __ _  ___   ___ 
-# |  _  / / _` | / _` || | / _ \  | |  | |/ __| / _ \ | |     / _` |/ __| / _ \
-# | | \ \| (_| || (_| || || (_) | | |__| |\__ \|  __/ | |____| (_| |\__ \|  __/
-# |_|  \_\\__,_| \__,_||_| \___/   \____/ |___/ \___|  \_____|\__,_||___/ \___|
-# ======================================================================================== 
+# -----------------------------------------
+#      RADIO USEDCASE
+# -----------------------------------------
 
 # Radio Astronomy Use Case
 print('Radio Use Cases')
@@ -272,16 +245,9 @@ for tags in tagarr:
 
 print('\nTotal Results : ',str(len(search_results)))
 
-# ======================================================================================== 
-#   _____                   _   __  __                                     
-#  / ____|                 | | |  \/  |                                    
-# | (___    ___  _ __    __| | | \  / |  ___  ___  ___   __ _   __ _   ___ 
-#  \___ \  / _ \| '_ \  / _` | | |\/| | / _ \/ __|/ __| / _` | / _` | / _ \
-#  ____) ||  __/| | | || (_| | | |  | ||  __/\__ \\__ \| (_| || (_| ||  __/
-# |_____/  \___||_| |_| \__,_| |_|  |_| \___||___/|___/ \__,_| \__, | \___|
-#                                                               __/ |      
-#                                                              |___/
-# ======================================================================================== 
+# -----------------------------------------
+#     SENDING MESSAGES
+# -----------------------------------------
 
 #  and (lastmsgdt < tweet.created_at) 
 # tweethist = [] # Set to commented after testing done
