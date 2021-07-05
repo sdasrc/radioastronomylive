@@ -51,11 +51,18 @@ oldtweetdays = 1 # Upto how many days in past should I search
 # This time is used to determine the time cutoff, only messages
 # sent after the time cutoff are considered
 specifycutoffmsgtime = False
+today_dt = datetime.today()
 
 if specifycutoffmsgtime:
     lastmsg = datetime.timestamp(datetime(2021, 7, 3, 11, 11, 1)) 
 else:
-    lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)//1000
+    try:
+        lastmsg = int(api.list_direct_messages(1)[0].created_timestamp)//1000
+    except Exception as err:
+        print(err)
+        print("Going for date 24 hours ago.")
+        direct_message = api.send_direct_message(ASTRO_RADIO_UID, "lastmsg error : "+str(err)) 
+        lastmsg = datetime.timestamp(datetime(today_dt.year, today_dt.month, today_dt.day - 1, today_dt.hour, today_dt.minute, today_dt.second)) 
 
 # Get a cutoff date in YYYY-MM-DD
 lastmsgdt = datetime.fromtimestamp(lastmsg)
