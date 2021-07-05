@@ -1,0 +1,4 @@
+Flask
+heroku
+tweepy
+python-dateutil==2.8.1
