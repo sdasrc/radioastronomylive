@@ -62,6 +62,8 @@ else:
 # Get a cutoff date in YYYY-MM-DD
 lastmsgdt = datetime.fromtimestamp(lastmsg)
 lastmsgcutoff = lastmsgdt - timedelta(days=oldtweetdays)
+
+print(lastmsgcutoff.strftime("Last msg from %Y-%m-%d %H:%M"))
 lastmsgcutoff = lastmsgcutoff.strftime("%Y-%m-%d") 
 
 # Create an empty array to which search results will be ADDED
