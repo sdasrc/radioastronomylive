@@ -14,7 +14,7 @@ import rtbottools     # Essential custommade functions
 # Import from keys if you are running locally. Import from 
 # environment variables (envvars) if you are running on a 
 # remote machine, like Heroku.
-localrun = True
+localrun = False
 
 if localrun: from keys import * 
 else: from envvars import *    
@@ -50,7 +50,7 @@ oldtweetdays = 1 # Upto how many days in past should I search
 # specify a custom time yourself.
 # This time is used to determine the time cutoff, only messages
 # sent after the time cutoff are considered
-specifycutoffmsgtime = True
+specifycutoffmsgtime = False
 
 if specifycutoffmsgtime:
     lastmsg = datetime.timestamp(datetime(2021, 7, 3, 11, 11, 1)) 
